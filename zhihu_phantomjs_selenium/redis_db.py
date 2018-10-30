@@ -7,7 +7,7 @@ class RedisOrm(object):
         self.host = setting.Redis['host']
         self.port=setting.Redis['port']
         self.database=setting.Redis['db']
-        self.list_url = 'zhihu+_url'
+        self.list_url = setting.Redis['table']
         self.db = redis.Redis(self.host,self.port,self.database)
     def insert_into_db(self,url):
         try:
