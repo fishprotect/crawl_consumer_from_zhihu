@@ -9,7 +9,7 @@ import mongo_db
 
 db = redis_db.RedisOrm()
 db_mongo = mongo_db.MongoOrm()
-url = 'https://www.zhihu.com/people/xiao-hong-76-54/following'
+url = 'https://www.zhihu.com/people/kenyaling/following'
 
 #设置浏览器请求头以及部分参数
 dcap = dict(DesiredCapabilities.PHANTOMJS)
@@ -21,7 +21,7 @@ driver = webdriver.PhantomJS( desired_capabilities = dcap )
 #设置最大加载时间
 driver.set_page_load_timeout(40) #40妙
 driver.get(url)
-time.sleep(1)
+time.sleep(4)
 
 print(driver.title)
 print(driver.current_url)
@@ -42,22 +42,37 @@ def is_css_selector_loaded(css_selector, wait_time=10):
         return False
 '''
 
-
 '''
 *第一部分，采集个人信息和页码，-----------complate
 *个人信息存入个人信息数据表，页码URL和解析函数名存入URL_解析函数表
 '''
 # 执行js
 # 注意document.getElementsByClassName()获取到的是一个list，滑到最后面
+try:
+    sex_m = driver.find_element_by_css_selector('.Icon--male')
+except:
+    sex_m = False
+try:
+    sex_f = driver.find_element_by_css_selector('.Icon--female')
+except:
+    sex_f = False
+if sex_m:
+    sex = 'M'
+elif sex_f:
+    sex = 'F'
+else:
+    sex = 'None'
+
 js_script_scroll = "document.getElementsByClassName('Pagination')[0].scrollIntoView(true)"
 js_script_click = "document.getElementsByClassName('ProfileHeader-contentFooter')[0].getElementsByTagName('button')[0].click()"
 driver.execute_script(js_script_scroll)
 driver.execute_script(js_script_click)
-time.sleep(1)
+time.sleep(4)
 
 # 打印本人详细信息
 details = driver.find_elements_by_css_selector('.ProfileHeader-detail .ProfileHeader-detailItem')
 d = {}
+d['sex'] = sex
 for detail in details:
     title = detail.find_element_by_css_selector('.ProfileHeader-detailLabel').text
     content = detail.find_element_by_css_selector('.ProfileHeader-detailValue').text
