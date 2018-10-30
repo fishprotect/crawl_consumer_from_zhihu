@@ -4,7 +4,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.action_chains import ActionChains
 import time
+import redis_db
 
+db = redis_db.RedisOrm()
 url = 'https://www.zhihu.com/people/xiao-hong-76-54/following'
 
 #设置浏览器请求头以及部分参数
@@ -69,8 +71,9 @@ page_num = int(page_num)
 print('base_url:',driver.current_url)
 base_url = driver.current_url
 for i in range(page_num):
-    url = base_url+'?page='+str(i+1)
-    print(url)
+    url = base_url+'?page='+str(i+1)+',1'
+    db.insert_into_db(url)
+    print('[INFO]:insert into redis ',url)
 
 '''
 *第二部分，采集关注的人的信息，----------------------complate
@@ -92,6 +95,9 @@ for each in follew:
     one['name'] = name
     one['url'] = url
     one['prof'] = text
+    redis_insert_url = url+',1'
+    db.insert_into_db(redis_insert_url)
+    print('[INFO]:insert into redis ',redis_insert_url)
     follews.append(one)
 print(len(follew))
 for one in follews:
