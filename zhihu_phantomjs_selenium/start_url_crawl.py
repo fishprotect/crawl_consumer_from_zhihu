@@ -21,7 +21,7 @@ driver = webdriver.PhantomJS( desired_capabilities = dcap )
 #设置最大加载时间
 driver.set_page_load_timeout(40) #40妙
 driver.get(url)
-time.sleep(4)
+time.sleep(1)
 
 print(driver.title)
 print(driver.current_url)
@@ -67,7 +67,7 @@ js_script_scroll = "document.getElementsByClassName('Pagination')[0].scrollIntoV
 js_script_click = "document.getElementsByClassName('ProfileHeader-contentFooter')[0].getElementsByTagName('button')[0].click()"
 driver.execute_script(js_script_scroll)
 driver.execute_script(js_script_click)
-time.sleep(4)
+time.sleep(1)
 
 # 打印本人详细信息
 details = driver.find_elements_by_css_selector('.ProfileHeader-detail .ProfileHeader-detailItem')
